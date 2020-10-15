@@ -26,39 +26,47 @@ You can read more at [www.docker.com](https://www.docker.com/)
 
 ## Clone repository
 
-Clone this git repository:
+* Clone this git repository:
 
-`git clone https://github.com/LMtx/ansible-lab-docker.git`
+    `git clone https://github.com/bbarman4u/ansible-lab-docker.git`
+* Note: The ubuntu version has been upgraded from 17.10 to 18.04 on the base image
 
-## Build images and run containers
+## Build images 
+* IMPORTANT: For Windows users - need to convert the `ansible/host/run.sh` into Unix format for line endings else your containers will stop as soon as they start (refer to the troubleshooting section)
+    * If you have git bash on your machine, open it and go to the directory `ansible/host` and execute the following to convert the file into Unix format
+        ```
+            dos2unix.exe run.sh
+        ```
+* Enter **ansible** directory containing [docker-compose.yml](./ansible/docker-compose.yml) file on a terminal
+    ```
+    cd ansible
+    ```
 
-Enter **ansible** directory containing [docker-compose.yml](./ansible/docker-compose.yml) file.
+* Build docker images and run containers in the background (details defined in [docker-compose.yml](./ansible/docker-compose.yml)):
 
-Build docker images and run containers in the background (details defined in [docker-compose.yml](./ansible/docker-compose.yml)):
+    `docker-compose up -d --build`
+## Run containers and validate ansible set up
+* Connect to **master node**:
 
-`docker-compose up -d --build`
+    `docker exec -it master01 bash`
 
-Connect to **master node**:
+* Verify if network connection is working between master and managed hosts:
 
-`docker exec -it master01 bash`
+    `ping -c 2 host01`
 
-Verify if network connection is working between master and managed hosts:
+* Start an [SSH Agent](https://man.openbsd.org/ssh-agent) on **master node** to handle SSH keys protected by passphrase:
 
-`ping -c 2 host01`
+    `ssh-agent bash`
 
-Start an [SSH Agent](https://man.openbsd.org/ssh-agent) on **master node** to handle SSH keys protected by passphrase:
+* Load private key into SSH Agent in order to allow establishing connections without entering key passphrase every time:
 
-`ssh-agent bash`
-
-Load private key into SSH Agent in order to allow establishing connections without entering key passphrase every time:
-
-`ssh-add master_key`
+    `ssh-add master_key`
 
     Enter passphrase for master_key:
 
-As **passphrase** enter: `12345`
+* As **passphrase** enter: `12345`
 
-Default key passphrase can be changed in [ansible/master/Dockerfile](./ansible/master/Dockerfile)
+    Note: Default key passphrase can be changed in [ansible/master/Dockerfile](./ansible/master/Dockerfile)
 
 ## Ansible playbooks
 
