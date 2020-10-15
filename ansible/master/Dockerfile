@@ -1,6 +1,6 @@
 # MASTER image - used to create the master container to manage hosts
 
-# use builded ansible_base (defined in ../base/Dockerfile) as a starting point
+# use built ansible_base (defined in ../base/Dockerfile) as a starting point
 FROM ansible_base:latest
 
 # install ansible package
